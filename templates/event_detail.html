@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflectify - Event Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background-color: white !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            color: #4285F4 !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .navbar .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+        }
+        .navbar .nav-link:hover {
+            color: #4285F4 !important;
+        }
+        .main-container {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 600;
+            padding: 15px 20px;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .event-header {
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        .event-WORK { background-color: #4285F4; }
+        .event-SOCIAL { background-color: #EA4335; }
+        .event-HEALTH { background-color: #34A853; }
+        .event-TRAVEL { background-color: #FBBC05; }
+        .event-MILESTONE { background-color: #9C27B0; }
+        .event-EDUCATION { background-color: #FF6D01; }
+        .event-CREATIVE { background-color: #00BCD4; }
+        .event-PERSONAL { background-color: #9E9E9E; }
+        .event-OTHER { background-color: #7F7F7F; }
+        
+        .event-timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .event-timeline::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background-color: #e0e0e0;
+            top: 0;
+            bottom: 0;
+            left: 20px;
+            margin-left: -1px;
+        }
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            left: 12px;
+            background-color: white;
+            border: 2px solid #4285F4;
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .timeline-date {
+            color: #666;
+            font-size: 0.85rem;
+        }
+        .timeline-content {
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .related-event-card {
+            transition: transform 0.2s;
+            border-left: 5px solid;
+            margin-bottom: 15px;
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+        .related-event-card:hover {
+            transform: translateY(-2px);
+        }
+        .entity-pill {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            background-color: #E8F0FE;
+            color: #4285F4;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .narrative-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            background-color: #F3E5F5;
+            color: #9C27B0;
+            border: 1px solid #9C27B0;
+        }
+        .status-badge {
+            font-size: 1rem;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        .card-WORK { 
+            border-left-color: #4285F4;
+            background-color: rgba(66, 133, 244, 0.1);
+        }
+        .card-SOCIAL { 
+            border-left-color: #EA4335;
+            background-color: rgba(234, 67, 53, 0.1);
+        }
+        .card-HEALTH { 
+            border-left-color: #34A853;
+            background-color: rgba(52, 168, 83, 0.1);
+        }
+        .card-TRAVEL { 
+            border-left-color: #FBBC05;
+            background-color: rgba(251, 188, 5, 0.1);
+        }
+        .card-MILESTONE { 
+            border-left-color: #9C27B0;
+            background-color: rgba(156, 39, 176, 0.1);
+        }
+        .card-EDUCATION { 
+            border-left-color: #FF6D01;
+            background-color: rgba(255, 109, 1, 0.1);
+        }
+        .card-CREATIVE { 
+            border-left-color: #00BCD4;
+            background-color: rgba(0, 188, 212, 0.1);
+        }
+        .card-PERSONAL { 
+            border-left-color: #9E9E9E;
+            background-color: rgba(158, 158, 158, 0.1);
+        }
+        .card-OTHER { 
+            border-left-color: #7F7F7F;
+            background-color: rgba(127, 127, 127, 0.1);
+        }
+        
+        .similarity-badge {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            margin-right: 4px;
+            background-color: #E8F0FE;
+            color: #4285F4;
+            border: 1px solid #d0e0fc;
+            border-radius: 12px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #555;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            color: #4285F4;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Reflectify</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('journal') }}">Journal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('timeline') }}">Timeline</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('events') }}">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('narratives') }}">Narratives</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('entities') }}">Entities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('mindmap') }}">Mind Map</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('insights') }}">Insights</a>
+                    </li>
+                </ul>
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+                        {{ session.username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Back button -->
+        <a href="{{ url_for('events') }}" class="back-link">
+            <i class="bi bi-arrow-left"></i> Back to Events
+        </a>
+        
+        <!-- Event Header -->
+        <div class="event-header event-{{ event.event_type|default('OTHER') }}">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2 class="mb-3">{{ event.name }}</h2>
+                    
+                    <!-- Status badge -->
+                    <span class="status-badge bg-{{ 'success' if event.status == 'completed' else 'secondary' }}">
+                        {{ event.status|capitalize }}
+                    </span>
+                    
+                    <!-- Importance badge -->
+                    {% if event.importance %}
+                        <span class="badge bg-light text-dark ms-2">
+                            {{ event.importance }} Importance
+                        </span>
+                    {% endif %}
+                    
+                    <!-- Event description -->
+                    {% if event.description %}
+                        <p class="mt-3 mb-0 text-white-50">{{ event.description }}</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="text-white-50 mb-2">First mentioned: {{ format_date(event.first_mentioned) }}</div>
+                    <div class="text-white-50 mb-3">Last mentioned: {{ format_date(event.last_mentioned) }}</div>
+                    
+                    {% if event.status != 'completed' %}
+                        <button class="btn btn-light mark-complete-btn" data-event-id="{{ event.event_id }}">
+                            <i class="bi bi-check-circle"></i> Mark as Complete
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Left Column - Event Details and Timeline -->
+            <div class="col-lg-8">
+                <!-- Event Details -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-info-circle"></i> Event Details
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Location -->
+                            {% if event.location %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="bi bi-geo-alt text-primary fs-4"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-1">Location</h6>
+                                            <p class="mb-0">{{ event.location }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Event Type -->
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="bi bi-tag text-primary fs-4"></i>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">Event Type</h6>
+                                        <p class="mb-0">{{ event.event_type|default('OTHER') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Mentions count -->
+                            {% if event.mentions %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="bi bi-chat-left-text text-primary fs-4"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-1">Mentions</h6>
+                                            <p class="mb-0">{{ event.mentions|length }} times in your journal</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Regularity -->
+                            {% if event.regularity %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="bi bi-arrow-repeat text-primary fs-4"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-1">Regularity</h6>
+                                            <p class="mb-0">
+                                                {% if event.regularity == 'RECURRING' %}
+                                                    Recurring event
+                                                {% elif event.regularity == 'ONE_TIME' %}
+                                                    One-time event
+                                                {% else %}
+                                                    {{ event.regularity|replace('_', ' ')|title }}
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <hr>
+                        
+                        <!-- Participants/People -->
+                        {% if event.participants %}
+                            <div class="mb-4">
+                                <h6><i class="bi bi-people"></i> People Involved</h6>
+                                <div>
+                                    {% for participant in event.participants %}
+                                        <span class="entity-pill">{{ participant }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Associated Entities -->
+                        {% if event.entities %}
+                            <div class="mb-4">
+                                <h6><i class="bi bi-diagram-3"></i> Associated Entities</h6>
+                                <div>
+                                    {% for entity in event.entities %}
+                                        <span class="entity-pill">
+                                            {{ entity.text }}
+                                            {% if entity.role %}
+                                                <small>({{ entity.role|lower }})</small>
+                                            {% endif %}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Narratives -->
+                        {% if narratives %}
+                            <div>
+                                <h6><i class="bi bi-book"></i> Part of Narratives</h6>
+                                <div>
+                                    {% for narrative in narratives %}
+                                        <span class="narrative-badge">
+                                            {{ narrative.narrative_arc or "Story" }}
+                                            <a href="{{ url_for('narrative_detail', narrative_id=narrative.narrative_id) }}" class="ms-1 text-decoration-none">
+                                                <i class="bi bi-arrow-up-right-circle-fill"></i>
+                                            </a>
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Event Timeline -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-clock-history"></i> Event Timeline
+                    </div>
+                    <div class="card-body">
+                        {% if timeline %}
+                            <div class="event-timeline">
+                                {% for item in timeline %}
+                                    <div class="timeline-item">
+                                        <div class="timeline-date">{{ format_date(item.date) }}</div>
+                                        <div class="timeline-content">
+                                            <p>{{ item.text }}</p>
+                                            
+                                            {% if item.sentiment %}
+                                                <span class="badge bg-{{ 'success' if item.sentiment == 'POSITIVE' else 'danger' if item.sentiment == 'NEGATIVE' else 'secondary' }}">
+                                                    {{ item.sentiment }}
+                                                </span>
+                                            {% endif %}
+                                            
+                                            {% if item.entry_id %}
+                                                <div class="mt-2">
+                                                    <a href="{{ url_for('timeline') }}#{{ item.entry_id }}" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-journal"></i> View in Journal
+                                                    </a>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="bi bi-clock" style="font-size: 2rem; color: #ccc;"></i>
+                                <p class="mt-3 text-muted">No timeline data available for this event.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column - Related Events and Similarity Data -->
+            <div class="col-lg-4">
+                <!-- Similar/Related Events -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="bi bi-diagram-3"></i> Related Events
+                    </div>
+                    <div class="card-body">
+                        {% if related_events %}
+                            {% for related in related_events %}
+                                <div class="card related-event-card card-{{ related.event_type|default('OTHER') }}">
+                                    <div class="card-body">
+                                        <h6 class="mb-2">{{ related.name }}</h6>
+                                        
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span class="badge bg-{{ 'success' if related.status == 'completed' else 'secondary' }}">
+                                                {{ related.status|capitalize }}
+                                            </span>
+                                            
+                                            {% if related.similarity %}
+                                                <span class="badge bg-light text-dark">
+                                                    {{ (related.similarity * 100)|round|int }}% similar
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        {% if related.relation_type %}
+                                            <div class="mb-2">
+                                                <span class="badge bg-info">{{ related.relation_type|replace('_', ' ')|title }}</span>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <div class="text-end">
+                                            <a href="{{ url_for('event_detail', event_id=related.event_id) }}" class="btn btn-sm btn-outline-primary">
+                                                View Details
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="bi bi-diagram-3" style="font-size: 2rem; color: #ccc;"></i>
+                                <p class="mt-3 text-muted">No related events found.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Similarity Indicators -->
+                {% if event.similarity_data or event.debug_similarity %}
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-link-45deg"></i> Similarity Analysis
+                        </div>
+                        <div class="card-body">
+                            <h6 class="mb-3">How this event was recognized across mentions:</h6>
+                            
+                            <div class="mb-3">
+                                {% if (event.mentions and event.mentions|length > 1) or (event.similarity_data and event.similarity_data.match_count and event.similarity_data.match_count > 1) %}
+                                    <span class="similarity-badge">
+                                        <i class="bi bi-layers"></i> 
+                                        Mentioned {{ event.mentions|length if event.mentions else event.similarity_data.match_count }} times
+                                    </span>
+                                {% endif %}
+                                
+                                {% if event.similarity_data and event.similarity_data.participants_match %}
+                                    <span class="similarity-badge">
+                                        <i class="bi bi-people"></i> Shared participants
+                                    </span>
+                                {% endif %}
+                                
+                                {% if event.debug_similarity and event.debug_similarity.component_details %}
+                                    {% set has_participants = false %}
+                                    {% for item in event.debug_similarity.component_details %}
+                                        {% if item[0] == 'participants' %}
+                                            {% set has_participants = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    {% if has_participants %}
+                                        <span class="similarity-badge">
+                                            <i class="bi bi-people"></i> Shared participants
+                                        </span>
+                                    {% endif %}
+                                {% endif %}
+                                
+                                {% if event.similarity_data and event.similarity_data.location_match %}
+                                    <span class="similarity-badge">
+                                        <i class="bi bi-geo-alt"></i> Consistent location
+                                    </span>
+                                {% endif %}
+                                
+                                {% if event.debug_similarity and event.debug_similarity.component_details %}
+                                    {% set has_location = false %}
+                                    {% for item in event.debug_similarity.component_details %}
+                                        {% if item[0] == 'location' %}
+                                            {% set has_location = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    {% if has_location %}
+                                        <span class="similarity-badge">
+                                            <i class="bi bi-geo-alt"></i> Consistent location
+                                        </span>
+                                    {% endif %}
+                                {% endif %}
+                                
+                                {% if event.similarity_data and event.similarity_data.semantic_match or (event.debug_similarity and event.debug_similarity.embedding > 0.5) %}
+                                    <span class="similarity-badge">
+                                        <i class="bi bi-cursor-text"></i> Semantic matching
+                                    </span>
+                                {% endif %}
+                                
+                                {% if event.similarity_data and event.similarity_data.time_match %}
+                                    <span class="similarity-badge">
+                                        <i class="bi bi-clock"></i> Time references
+                                    </span>
+                                {% endif %}
+                                
+                                {% if event.debug_similarity and event.debug_similarity.component_details %}
+                                    {% set has_time = false %}
+                                    {% for item in event.debug_similarity.component_details %}
+                                        {% if item[0] == 'time' %}
+                                            {% set has_time = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    
+                                    {% if has_time %}
+                                        <span class="similarity-badge">
+                                            <i class="bi bi-clock"></i> Time references
+                                        </span>
+                                    {% endif %}
+                                {% endif %}
+                                
+                                {% if event.similarity_data and event.similarity_data.narrative_connections or (narratives and narratives|length > 0) %}
+                                    <span class="similarity-badge">
+                                        <i class="bi bi-book"></i> Narrative context
+                                    </span>
+                                {% endif %}
+                            </div>
+                            
+                            {% if event.debug_similarity %}
+                                <div class="alert alert-light">
+                                    <h6 class="mb-2">Technical Details:</h6>
+                                    <div class="small">
+                                        <div><strong>Semantic similarity:</strong> {{ (event.debug_similarity.embedding * 100)|round|int }}%</div>
+                                        <div><strong>Keyword similarity:</strong> {{ (event.debug_similarity.keyword * 100)|round|int }}%</div>
+                                        <div><strong>Component similarity:</strong> {{ (event.debug_similarity.component * 100)|round|int }}%</div>
+                                        <div><strong>Overall score:</strong> {{ (event.debug_similarity.combined * 100)|round|int }}%</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="alert alert-info">
+                                <i class="bi bi-lightbulb"></i> 
+                                <strong>How it works:</strong> Reflectify uses a combination of semantic analysis, 
+                                entity matching, and contextual understanding to recognize when you're referring 
+                                to the same event across multiple journal entries, even when your descriptions vary.
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mark event as complete
+        document.querySelectorAll('.mark-complete-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const eventId = this.dataset.eventId;
+                
+                if (confirm('Mark this event as completed?')) {
+                    fetch(`/mark_complete/${eventId}`, {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Show success message
+                            alert('Event marked as completed!');
+                            
+                            // Show potentially related events if returned
+                            if (data.potentially_completed && data.potentially_completed.length > 0) {
+                                let message = 'These similar events might also be completed:\n';
+                                data.potentially_completed.forEach(event => {
+                                    message += `- ${event.name}\n`;
+                                });
+                                message += '\nWould you like to mark them as completed too?';
+                                
+                                if (confirm(message)) {
+                                    let promises = data.potentially_completed.map(event => 
+                                        fetch(`/mark_complete/${event.event_id}`, {
+                                            method: 'POST'
+                                        })
+                                    );
+                                    
+                                    Promise.all(promises)
+                                        .then(() => window.location.reload());
+                                } else {
+                                    window.location.reload();
+                                }
+                            } else {
+                                window.location.reload();
+                            }
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while updating the event.');
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflectify - Timeline</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background-color: white !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            color: #4285F4 !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .navbar .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+        }
+        .navbar .nav-link:hover {
+            color: #4285F4 !important;
+        }
+        .main-container {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 600;
+            padding: 15px 20px;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .timeline {
+            position: relative;
+            padding: 0 0 0 40px;
+            margin-top: 20px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 16px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #e0e0e0;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #4285F4;
+            border: 2px solid white;
+            z-index: 1;
+        }
+        .timeline-date {
+            position: relative;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #4285F4;
+        }
+        .timeline-content {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+        .entry-content {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .entry-metadata {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 10px;
+        }
+        .event-chip {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: white;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .event-WORK { background-color: #4285F4; }
+        .event-SOCIAL { background-color: #EA4335; }
+        .event-HEALTH { background-color: #34A853; }
+        .event-TRAVEL { background-color: #FBBC05; }
+        .event-MILESTONE { background-color: #9C27B0; }
+        .event-EDUCATION { background-color: #FF6D01; }
+        .event-CREATIVE { background-color: #00BCD4; }
+        .event-PERSONAL { background-color: #9E9E9E; }
+        .event-OTHER { background-color: #7F7F7F; }
+        
+        .entity-pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background-color: #E8F0FE;
+            color: #4285F4;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .month-header {
+            position: relative;
+            padding-left: 20px;
+            font-size: 1.5rem;
+            margin-top: 40px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            color: #555;
+        }
+        .month-header::before {
+            content: '';
+            position: absolute;
+            left: -13px;
+            top: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #9C27B0;
+            border: 3px solid white;
+            z-index: 1;
+        }
+        .filter-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .filter-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        .emotion-chart {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .narrative-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            background-color: #F3E5F5;
+            color: #9C27B0;
+            border: 1px solid #9C27B0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Reflectify</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('journal') }}">Journal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('timeline') }}">Timeline</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('events') }}">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('narratives') }}">Narratives</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('entities') }}">Entities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('mindmap') }}">Mind Map</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('insights') }}">Insights</a>
+                    </li>
+                </ul>
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+                        {{ session.username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="row">
+            <!-- Timeline Content -->
+            <div class="col-lg-9">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Your Journal Timeline</h5>
+                        <span class="badge bg-primary">
+                            {% set total_entries = 0 %}
+                            {% for month_entries in entries_by_month.values() %}
+                                {% set total_entries = total_entries + month_entries|length %}
+                            {% endfor %}
+                            {{ total_entries }} Entries
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        {% if emotional_arc_chart %}
+                            <div class="emotion-chart mb-4">
+                                <h6 class="mb-3">Emotional Journey</h6>
+                                <img src="data:image/png;base64,{{ emotional_arc_chart }}" alt="Emotional Arc" class="img-fluid">
+                            </div>
+                        {% endif %}
+                        
+                        {% if narratives %}
+                            <div class="mb-4">
+                                <h6>Active Narratives in This Period</h6>
+                                <div class="d-flex flex-wrap mt-2">
+                                    {% for narrative in narratives %}
+                                        <span class="narrative-badge">
+                                            {{ narrative.narrative_arc or "Story" }}
+                                            <a href="{{ url_for('narrative_detail', narrative_id=narrative.narrative_id) }}" class="ms-1 text-decoration-none">
+                                                <i class="bi bi-arrow-up-right-circle-fill"></i>
+                                            </a>
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if sorted_months %}
+                            <div class="timeline">
+                                {% for month in sorted_months %}
+                                    <div class="month-header">{{ month }}</div>
+                                    
+                                    {% for entry in entries_by_month[month] %}
+                                        <div class="timeline-item" id="{{ entry.entry_id }}">
+                                            <div class="timeline-date">{{ format_date(entry.date) }}</div>
+                                            <div class="timeline-content">
+                                                <div class="entry-metadata">
+                                                    <span>
+                                                        {% if entry.summary and entry.summary.sentiment %}
+                                                            <span class="badge bg-{{ 'success' if entry.summary.sentiment == 'POSITIVE' else 'danger' if entry.summary.sentiment == 'NEGATIVE' else 'secondary' }}">
+                                                                {{ entry.summary.sentiment }}
+                                                            </span>
+                                                        {% endif %}
+                                                        
+                                                        {% if entry.summary and entry.summary.primary_emotion %}
+                                                            <span class="badge bg-info">{{ entry.summary.primary_emotion }}</span>
+                                                        {% endif %}
+                                                    </span>
+                                                    <span>{{ format_time_ago(entry.date) }}</span>
+                                                </div>
+                                                
+                                                <div class="entry-content">
+                                                    {{ entry.text }}
+                                                </div>
+                                                
+                                                {% if entry_events and entry.entry_id in entry_events %}
+                                                    <div class="mb-3">
+                                                        <h6 class="small text-muted mb-2">Events</h6>
+                                                        <div>
+                                                            {% for event in entry_events[entry.entry_id] %}
+                                                                <a href="{{ url_for('event_detail', event_id=event.event_id) }}" class="text-decoration-none">
+                                                                    <span class="event-chip event-{{ event.event_type|default('OTHER') }}">
+                                                                        {{ event.name }}
+                                                                    </span>
+                                                                </a>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="bi bi-calendar-x" style="font-size: 3rem; color: #ccc;"></i>
+                                <h5 class="mt-3">No entries found for this time period</h5>
+                                <p class="text-muted">Try changing your date range or start writing journal entries.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filters Sidebar -->
+            <div class="col-lg-3">
+                <div class="filter-card">
+                    <h5 class="mb-3">Date Range</h5>
+                    
+                    <form id="dateFilterForm" class="mb-3">
+                        <div class="mb-3">
+                            <label class="filter-label" for="startDate">Start Date</label>
+                            <input type="date" class="form-control" id="startDate" name="start_date" value="{{ start_date }}">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="filter-label" for="endDate">End Date</label>
+                            <input type="date" class="form-control" id="endDate" name="end_date" value="{{ end_date }}">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    </form>
+                    
+                    <hr>
+                    
+                    <div class="mb-3">
+                        <h6>Quick Filters</h6>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary btn-sm quick-filter" data-days="7">Last 7 Days</button>
+                            <button class="btn btn-outline-primary btn-sm quick-filter" data-days="30">Last 30 Days</button>
+                            <button class="btn btn-outline-primary btn-sm quick-filter" data-days="90">Last 90 Days</button>
+                            <button class="btn btn-outline-primary btn-sm quick-filter" data-days="365">Last Year</button>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if narratives %}
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="bi bi-book"></i> Narratives in This Period
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                {% for narrative in narratives[:5] %}
+                                    <li class="list-group-item px-0 border-bottom">
+                                        <div class="d-flex justify-content-between">
+                                            <span>
+                                                {{ narrative.narrative_arc or "Story" }}
+                                            </span>
+                                            <small class="text-muted">{{ format_date(narrative.date) }}</small>
+                                        </div>
+                                        <div class="small text-muted mt-1">
+                                            {% if narrative.goals %}Goals: {{ narrative.goals|length }}{% endif %}
+                                            {% if narrative.conflicts %}Conflicts: {{ narrative.conflicts|length }}{% endif %}
+                                        </div>
+                                        <a href="{{ url_for('narrative_detail', narrative_id=narrative.narrative_id) }}" class="btn btn-sm btn-outline-primary mt-2">
+                                            View Details
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            
+                            {% if narratives|length > 5 %}
+                                <div class="text-center mt-3">
+                                    <a href="{{ url_for('narratives') }}" class="btn btn-sm btn-outline-primary w-100">
+                                        See All ({{ narratives|length }})
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Quick date filters
+        document.querySelectorAll('.quick-filter').forEach(button => {
+            button.addEventListener('click', function() {
+                const days = parseInt(this.dataset.days);
+                const endDate = new Date();
+                const startDate = new Date();
+                startDate.setDate(startDate.getDate() - days);
+                
+                document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
+                document.getElementById('endDate').value = endDate.toISOString().split('T')[0];
+                
+                document.getElementById('dateFilterForm').submit();
+            });
+        });
+        
+        // Highlight entries when linked directly
+        document.addEventListener('DOMContentLoaded', function() {
+            const hash = window.location.hash;
+            if (hash) {
+                const entryElement = document.querySelector(hash);
+                if (entryElement) {
+                    entryElement.scrollIntoView();
+                    entryElement.querySelector('.timeline-content').style.boxShadow = '0 0 10px rgba(66, 133, 244, 0.8)';
+                    setTimeout(() => {
+                        entryElement.querySelector('.timeline-content').style.boxShadow = '';
+                    }, 3000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

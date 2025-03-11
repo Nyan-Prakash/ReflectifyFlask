@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflectify - Events</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background-color: white !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            color: #4285F4 !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .navbar .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+        }
+        .navbar .nav-link:hover {
+            color: #4285F4 !important;
+        }
+        .main-container {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 600;
+            padding: 15px 20px;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .btn-primary {
+            background-color: #4285F4;
+            border: none;
+        }
+        .event-card {
+            transition: transform 0.2s;
+            border-left: 5px solid;
+            margin-bottom: 15px;
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+        .event-card:hover {
+            transform: translateY(-2px);
+        }
+        .card-WORK { 
+            border-left-color: #4285F4;
+            background-color: rgba(66, 133, 244, 0.1);
+        }
+        .card-SOCIAL { 
+            border-left-color: #EA4335;
+            background-color: rgba(234, 67, 53, 0.1);
+        }
+        .card-HEALTH { 
+            border-left-color: #34A853;
+            background-color: rgba(52, 168, 83, 0.1);
+        }
+        .card-TRAVEL { 
+            border-left-color: #FBBC05;
+            background-color: rgba(251, 188, 5, 0.1);
+        }
+        .card-MILESTONE { 
+            border-left-color: #9C27B0;
+            background-color: rgba(156, 39, 176, 0.1);
+        }
+        .card-EDUCATION { 
+            border-left-color: #FF6D01;
+            background-color: rgba(255, 109, 1, 0.1);
+        }
+        .card-CREATIVE { 
+            border-left-color: #00BCD4;
+            background-color: rgba(0, 188, 212, 0.1);
+        }
+        .card-PERSONAL { 
+            border-left-color: #9E9E9E;
+            background-color: rgba(158, 158, 158, 0.1);
+        }
+        .card-OTHER { 
+            border-left-color: #7F7F7F;
+            background-color: rgba(127, 127, 127, 0.1);
+        }
+        
+        .event-type-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            color: white;
+        }
+        .badge-WORK { background-color: #4285F4; }
+        .badge-SOCIAL { background-color: #EA4335; }
+        .badge-HEALTH { background-color: #34A853; }
+        .badge-TRAVEL { background-color: #FBBC05; }
+        .badge-MILESTONE { background-color: #9C27B0; }
+        .badge-EDUCATION { background-color: #FF6D01; }
+        .badge-CREATIVE { background-color: #00BCD4; }
+        .badge-PERSONAL { background-color: #9E9E9E; }
+        .badge-OTHER { background-color: #7F7F7F; }
+        
+        .event-date {
+            color: #777;
+            font-size: 0.85rem;
+        }
+        .similarity-badge {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            margin-right: 4px;
+            background-color: #E8F0FE;
+            color: #4285F4;
+            border: 1px solid #d0e0fc;
+            border-radius: 12px;
+        }
+        .filter-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .filter-label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        .nav-pills .nav-link {
+            color: #555;
+            padding: 5px 10px;
+            margin-right: 5px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #4285F4;
+        }
+        .color-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .narrative-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            background-color: #F3E5F5;
+            color: #9C27B0;
+            border: 1px solid #9C27B0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Reflectify</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('journal') }}">Journal</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('timeline') }}">Timeline</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('events') }}">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('narratives') }}">Narratives</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('entities') }}">Entities</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('mindmap') }}">Mind Map</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('insights') }}">Insights</a>
+                    </li>
+                </ul>
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+                        {{ session.username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="row">
+            <!-- Filters -->
+            <div class="col-lg-3">
+                <div class="filter-card">
+                    <h5 class="mb-3">Filters</h5>
+                    
+                    <div class="mb-3">
+                        <div class="filter-label">Status</div>
+                        <div class="btn-group w-100" role="group">
+                            <a href="{{ url_for('events', status='All', type=type_filter, timeframe=timeframe, narrative=narrative_filter) }}" class="btn btn-sm {{ 'btn-primary' if status_filter == 'All' else 'btn-outline-primary' }}">All</a>
+                            <a href="{{ url_for('events', status='ongoing', type=type_filter, timeframe=timeframe, narrative=narrative_filter) }}" class="btn btn-sm {{ 'btn-primary' if status_filter == 'ongoing' else 'btn-outline-primary' }}">Ongoing</a>
+                            <a href="{{ url_for('events', status='completed', type=type_filter, timeframe=timeframe, narrative=narrative_filter) }}" class="btn btn-sm {{ 'btn-primary' if status_filter == 'completed' else 'btn-outline-primary' }}">Completed</a>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="filter-label">Event Type</div>
+                        <select class="form-select" id="eventType" onchange="updateFilters('type', this.value)">
+                            <option value="All" {{ 'selected' if type_filter == 'All' else '' }}>All Types</option>
+                            <option value="WORK" {{ 'selected' if type_filter == 'WORK' else '' }}>Work</option>
+                            <option value="SOCIAL" {{ 'selected' if type_filter == 'SOCIAL' else '' }}>Social</option>
+                            <option value="HEALTH" {{ 'selected' if type_filter == 'HEALTH' else '' }}>Health</option>
+                            <option value="TRAVEL" {{ 'selected' if type_filter == 'TRAVEL' else '' }}>Travel</option>
+                            <option value="MILESTONE" {{ 'selected' if type_filter == 'MILESTONE' else '' }}>Milestone</option>
+                            <option value="EDUCATION" {{ 'selected' if type_filter == 'EDUCATION' else '' }}>Education</option>
+                            <option value="CREATIVE" {{ 'selected' if type_filter == 'CREATIVE' else '' }}>Creative</option>
+                            <option value="PERSONAL" {{ 'selected' if type_filter == 'PERSONAL' else '' }}>Personal</option>
+                            <option value="OTHER" {{ 'selected' if type_filter == 'OTHER' else '' }}>Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="filter-label">Time Frame</div>
+                        <select class="form-select" id="timeFrame" onchange="updateFilters('timeframe', this.value)">
+                            <option value="All Time" {{ 'selected' if timeframe == 'All Time' else '' }}>All Time</option>
+                            <option value="Last 30 Days" {{ 'selected' if timeframe == 'Last 30 Days' else '' }}>Last 30 Days</option>
+                            <option value="Last 90 Days" {{ 'selected' if timeframe == 'Last 90 Days' else '' }}>Last 90 Days</option>
+                            <option value="This Year" {{ 'selected' if timeframe == 'This Year' else '' }}>This Year</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="filter-label">Narrative</div>
+                        <select class="form-select" id="narrativeFilter" onchange="updateFilters('narrative', this.value)">
+                            <option value="All" {{ 'selected' if narrative_filter == 'All' else '' }}>All Narratives</option>
+                            {% for narrative in narrative_options %}
+                                <option value="{{ narrative.id }}" {{ 'selected' if narrative_filter == narrative.id else '' }}>
+                                    {{ narrative.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-secondary btn-sm w-100" onclick="resetFilters()">
+                        Reset Filters
+                    </button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-info-circle"></i> Legend
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <strong>Event Types</strong>
+                        </div>
+                        {% for type, color in color_map.items() %}
+                            <div class="mb-1">
+                                <span class="color-dot" data-color="{{ color }}"></span>
+                                {{ type }}
+                            </div>
+                        {% endfor %}
+                        
+                        <hr>
+                        
+                        <div class="mb-2">
+                            <strong>Relationship Types</strong>
+                        </div>
+                        <div class="mb-1">
+                            <span class="similarity-badge">
+                                <i class="bi bi-people"></i>
+                            </span> Shared participants
+                        </div>
+                        <div class="mb-1">
+                            <span class="similarity-badge">
+                                <i class="bi bi-geo-alt"></i>
+                            </span> Shared location
+                        </div>
+                        <div class="mb-1">
+                            <span class="similarity-badge">
+                                <i class="bi bi-cursor-text"></i>
+                            </span> Semantic similarity
+                        </div>
+                        <div class="mb-1">
+                            <span class="narrative-badge">
+                                <i class="bi bi-book"></i>
+                            </span> Narrative connection
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Events List -->
+            <div class="col-lg-9">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4>
+                        {% if status_filter != 'All' %}
+                            {{ status_filter|capitalize }} 
+                        {% endif %}
+                        {% if type_filter != 'All' %}
+                            {{ type_filter|capitalize }} 
+                        {% endif %}
+                        Events
+                        {% if timeframe != 'All Time' %}
+                            ({{ timeframe }})
+                        {% endif %}
+                        {% if narrative_filter != 'All' %}
+                            {% for narrative in narrative_options %}
+                                {% if narrative.id == narrative_filter %}
+                                    in "{{ narrative.name }}" Narrative
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </h4>
+                    <div>
+                        <span class="badge bg-primary">{{ events|length }} Events</span>
+                    </div>
+                </div>
+                
+                <!-- Events by Type -->
+                {% if events_by_type %}
+                    {% for event_type, type_events in events_by_type.items() %}
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>
+                                    <span class="event-type-badge badge-{{ event_type }}">{{ event_type }}</span>
+                                    Events ({{ type_events|length }})
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                {% for event in type_events %}
+                                    <div class="card event-card card-{{ event.event_type|default('OTHER') }}">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h5 class="mb-1">{{ event.name }}</h5>
+                                                    <div>
+                                                        <span class="badge bg-{{ 'success' if event.status == 'completed' else 'secondary' }}">
+                                                            {{ event.status|capitalize }}
+                                                        </span>
+                                                        
+                                                        {% if event.importance %}
+                                                            <span class="badge bg-{{ 'danger' if event.importance == 'HIGH' else 'warning' if event.importance == 'MEDIUM' else 'light text-dark' }}">
+                                                                {{ event.importance }} Importance
+                                                            </span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <span class="event-date">Last mentioned: {{ format_date(event.last_mentioned) }}</span>
+                                            </div>
+                                            
+                                            {% if event.description %}
+                                                <p class="mt-2 mb-2 text-muted">{{ event.description }}</p>
+                                            {% endif %}
+                                            
+                                            <div class="row mt-3">
+                                                <div class="col-md-8">
+                                                    {% if event.location or event.participants %}
+                                                        <div class="mb-2">
+                                                            {% if event.location %}
+                                                                <div class="mb-1"><i class="bi bi-geo-alt"></i> {{ event.location }}</div>
+                                                            {% endif %}
+                                                            
+                                                            {% if event.participants %}
+                                                                <div><i class="bi bi-people"></i> {{ event.participants|join(', ') }}</div>
+                                                            {% endif %}
+                                                        </div>
+                                                    {% endif %}
+                                                    
+                                                    {% if event.similarity_data %}
+                                                        <div class="mb-2">
+                                                            {% if event.similarity_data.match_count and event.similarity_data.match_count > 1 %}
+                                                                <span class="similarity-badge">
+                                                                    <i class="bi bi-layers"></i> Mentioned {{ event.similarity_data.match_count }} times
+                                                                </span>
+                                                            {% endif %}
+                                                            
+                                                            {% if event.similarity_data.participants_match %}
+                                                                <span class="similarity-badge">
+                                                                    <i class="bi bi-people"></i> Shared participants
+                                                                </span>
+                                                            {% endif %}
+                                                            
+                                                            {% if event.similarity_data.location_match %}
+                                                                <span class="similarity-badge">
+                                                                    <i class="bi bi-geo-alt"></i> Consistent location
+                                                                </span>
+                                                            {% endif %}
+                                                            
+                                                            {% if event.similarity_data.semantic_match %}
+                                                                <span class="similarity-badge">
+                                                                    <i class="bi bi-cursor-text"></i> Semantic matching
+                                                                </span>
+                                                            {% endif %}
+                                                            
+                                                            {% if event.similarity_data.time_match %}
+                                                                <span class="similarity-badge">
+                                                                    <i class="bi bi-clock"></i> Time references
+                                                                </span>
+                                                            {% endif %}
+                                                        </div>
+                                                    {% endif %}
+                                                    
+                                                    {% if event.similarity_data and event.similarity_data.narratives %}
+                                                        <div class="mb-2">
+                                                            {% for narrative in event.similarity_data.narratives %}
+                                                                <span class="narrative-badge">
+                                                                    <i class="bi bi-book"></i> {{ narrative }}
+                                                                </span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                                    <a href="{{ url_for('event_detail', event_id=event.event_id) }}" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-info-circle"></i> Details
+                                                    </a>
+                                                    
+                                                    {% if event.status != 'completed' %}
+                                                        <button class="btn btn-sm btn-outline-success mark-complete-btn" data-event-id="{{ event.event_id }}">
+                                                            <i class="bi bi-check-circle"></i> Mark Complete
+                                                        </button>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="card">
+                        <div class="card-body text-center py-5">
+                            <i class="bi bi-calendar-x" style="font-size: 3rem; color: #ccc;"></i>
+                            <h5 class="mt-3">No events found</h5>
+                            <p class="text-muted">Try changing your filters or write more journal entries to create events.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mark event as complete
+        document.querySelectorAll('.mark-complete-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const eventId = this.dataset.eventId;
+                
+                if (confirm('Mark this event as completed?')) {
+                    fetch(`/mark_complete/${eventId}`, {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update UI
+                            this.parentElement.parentElement.parentElement.querySelector('.badge').textContent = 'Completed';
+                            this.parentElement.parentElement.parentElement.querySelector('.badge').classList.remove('bg-secondary');
+                            this.parentElement.parentElement.parentElement.querySelector('.badge').classList.add('bg-success');
+                            this.remove();
+                            
+                            // Show potentially related events if returned
+                            if (data.potentially_completed && data.potentially_completed.length > 0) {
+                                let message = 'These similar events might also be completed:\n';
+                                data.potentially_completed.forEach(event => {
+                                    message += `- ${event.name}\n`;
+                                });
+                                message += '\nWould you like to mark them as completed too?';
+                                
+                                if (confirm(message)) {
+                                    let promises = data.potentially_completed.map(event => 
+                                        fetch(`/mark_complete/${event.event_id}`, {
+                                            method: 'POST'
+                                        })
+                                    );
+                                    
+                                    Promise.all(promises)
+                                        .then(() => window.location.reload());
+                                }
+                            }
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while updating the event.');
+                    });
+                }
+            });
+        });
+        
+        // Update filters
+        function updateFilters(filterType, value) {
+            // Get current URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Update the specified filter
+            urlParams.set(filterType, value);
+            
+            // Redirect to new URL with updated parameters
+            window.location.href = '{{ url_for("events") }}?' + urlParams.toString();
+        }
+        
+        // Reset all filters
+        function resetFilters() {
+            window.location.href = '{{ url_for("events") }}';
+        }
+        
+        // Set color dots background color
+        document.querySelectorAll('.color-dot').forEach(dot => {
+            dot.style.backgroundColor = dot.dataset.color;
+        });
+    </script>
+</body>
+</html>
